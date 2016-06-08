@@ -25,14 +25,15 @@ class Cell
     @val = val
   end
 
-  def val(id=nil)  
+  def val(ids=nil)
     if self.formula?
-      if id == self.object_id
+      ids = ids ? ids : []
+      if ids.include? self.object_id
         raise "entered circular loop of evaluation"
-      elsif id == nil
-        id = self.object_id
+      else
+        ids << self.object_id
       end
-      self.eval_formula(id)
+      self.eval_formula(ids)
     else
       @val
     end

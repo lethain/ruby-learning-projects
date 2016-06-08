@@ -52,5 +52,25 @@ class TestSpreadsheet < Test::Unit::TestCase
     assert_equal(s["B1"].val, 10)
   end
 
+  def test_circular_formula
+    s = Spreadsheet.new
+    s["A1"] = "sum(A1:A10)"
+    self.assert_raise_message("entered circular loop of evaluation") do
+      s["A1"].val
+    end    
+  end
+
+  def test_complex_circular_formula
+    s = Spreadsheet.new
+    s["A1"] = "sum(B1:B10)"
+    s["B1"] = 10
+    s["B2"] = 20
+    s["B3"] = "sum(C1:C2)"
+    s["C1"] = "sum(B1:B10)"
+    self.assert_raise_message("entered circular loop of evaluation") do
+      s["A1"].val
+    end
+  end  
+
 
 end
