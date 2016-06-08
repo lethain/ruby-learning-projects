@@ -12,14 +12,14 @@ class StatsdServer
 
   def initialize_state
     @timers, @gauges, @counters = {}, {}, {}
+    @counters.default = 0
   end
 
   def handle(msg)
     key, val, kind = /([a-zA-Z_-]+):([0-9.]+)\|([a-z]+)/.match(msg).captures
     case kind
     when 'c'
-      @counters[key] ||= 0
-      @counters[key] +=  val.to_i
+      @counters[key] += val.to_i
     when 'g'
       @gauges[key] = val.to_i
     when 'ms'
