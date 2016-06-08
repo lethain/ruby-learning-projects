@@ -1,5 +1,10 @@
 (This project is modeled after the [Redis project in go-learning-projects](https://github.com/lethain/go-learning-projects/tree/master/redis).)
 
+## Prerequisites
+
+1. Read the [Redis Protocol Specification](http://redis.io/topics/protocol).
+2. Take a look at [Ruby's Socket module](http://ruby-doc.org/stdlib-1.9.3/libdoc/socket/rdoc/Socket.html).
+
 ## Goals
 
 1. Write a TCP server in Go that runs on port `6379`.
