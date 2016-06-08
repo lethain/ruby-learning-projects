@@ -38,7 +38,6 @@ class TestParse < Test::Unit::TestCase
     path = 'complex.cfg'
 
     cfg = np.parse_path(path)
-    puts cfg
     assert_equal(cfg.name, 'global')
     assert_equal(cfg.attrs[0], "user www www")
     assert_equal(cfg.attrs[1], "worker_processes 5")

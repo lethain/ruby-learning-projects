@@ -1,13 +1,5 @@
 # Parse nginx configs
 
-TOKENS = [
-  :semicolon,
-  :term,
-  :block_start,
-  :block_end,
-]
-
-
 class NginxParser
   def parse_path(path)
     File.open(path, 'r') do |f|
@@ -87,7 +79,6 @@ class NginxParser
   end
 end
 
-
 class Block
   attr_accessor :name, :attrs, :blocks
 
@@ -101,5 +92,4 @@ class Block
     children = (@blocks.map { |b| b.name }).join(',')
     "Block(#{@name}, attrs[#{@attrs.join(',')}], children[#{children}])"
   end
-
 end
