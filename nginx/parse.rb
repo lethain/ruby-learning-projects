@@ -1,5 +1,12 @@
 # Parse nginx configs
 
+TOKENS = [
+  :semicolon,
+  :term,
+  :block_start,
+  :block_end,
+]
+
 
 class NginxParser
   def parse_path(path)
@@ -18,28 +25,37 @@ class NginxParser
   end
 
   def parse_stream(stream)
-    self.words(stream) do |word|
-      puts word
+    self.tokens(stream) do |kind, token|
+      puts "#{kind}: #{token}"
     end
   end
 
-  def words(stream)
-    word = ""
-    stream.each_char do |c|
-      if c =~ /^\s$/
-        if word.length > 0
-          yield word
-          word = ""
-        end
-      else
-        word << c
+  def tokens(stream)
+    acc = ''
+    flush_acc = Proc.new do
+      if acc.length > 0
+        yield :term, acc
+        acc = ''
       end
     end
-    if word.length > 0
-      yield word
+    
+    stream.each_char do |c|
+      case c
+      when /\s/
+        flush_acc.call
+      when ';'
+        flush_acc.call
+        yield :semicolon, c
+      when '{'
+        flush_acc.call
+        yield :block_start, c
+      when '}'
+        flush_acc.call
+        yield :block_end, c
+      else
+        acc << c
+      end
     end
+    flush_acc
   end
-
-  
-
 end
