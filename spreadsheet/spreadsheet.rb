@@ -15,8 +15,7 @@ class CellRange
         yield "#{row}#{col}"
       end
     end
-  end
-  
+  end  
 end
 
 class Cell
@@ -28,7 +27,6 @@ class Cell
 
   def val(id=nil)  
     if self.formula?
-      puts "is formula: #{@val}, id: #{id}"
       if id == self.object_id
         raise "entered circular loop of evaluation"
       elsif id == nil
@@ -40,9 +38,22 @@ class Cell
     end
   end
 
+  def parse_formula()
+    /([a-zA-Z_]+)\(([A-Za-z0-9:]+)\)/.match(@val).captures
+  end
+
   def eval_formula(id)
-    cells = []
-    "not implemented"
+    func, range = self.parse_formula()
+    vals = CellRange.new(range).map { |x| @row.sheet[x].val.to_i }
+    
+    case func
+    when "sum"
+      vals.reduce(:+) 
+    when "avg"
+      vals.reduce(:+).to_f.fdiv(vals.length)
+    else
+      raise "unknown formula: #{func}"
+    end
   end
 
   def formula?
@@ -61,20 +72,23 @@ class Cell
   end
 
   def to_s
-    "Cell(#{self.object_id},#{@row}#{@col}, #{@val})"
+    "Cell(#{self.object_id},#{@row.row}#{@col}, #{@val})"
   end
 
 end
 
 class Row
-  def initialize(row)
+  attr_reader :sheet, :row
+  
+  def initialize(sheet, row)
+    @sheet = sheet
     @row = row
     @cols = {}
   end
 
   def get_or_create_col(col)
     if !@cols.key?(col)
-      @cols[col] = Cell.new(@row, col)
+      @cols[col] = Cell.new(self, col)
     end
     @cols[col]
 
@@ -106,7 +120,7 @@ class Spreadsheet
 
   def get_or_create_row(row)
     if !@rows.key?(row)
-      @rows[row] = Row.new(row)
+      @rows[row] = Row.new(self, row)
     end
     @rows[row]
   end
