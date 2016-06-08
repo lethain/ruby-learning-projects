@@ -16,5 +16,5 @@ Projects:
     existing statsd clients like [statsd-ruby](https://github.com/reinh/statsd).
 3. [redis](./redis/) - implement a Redis server which communicates with existing
     Redis clients.
-4. [nginx config parser](./nginx/] - implement a parser for Nginx configuration files.
+4. [nginx config parser](./nginx/) - implement a parser for Nginx configuration files.
 3. more to come...
