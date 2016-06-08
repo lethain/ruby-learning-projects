@@ -1,6 +1,6 @@
 # Implement a Spreadsheet
 
-The goal of this proejct is to implement a class which
+The goal of this project is to implement a class which
 allows you treat it like a simple spreadsheet.
 You should be able to access it as follows:
 

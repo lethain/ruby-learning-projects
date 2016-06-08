@@ -12,4 +12,6 @@ Projects:
 1. [spreadsheet](./spreadsheet/) - implement a simple class which represents a Spreadsheet,
     including both overriding the `[]` and `[]=` methods for easy access,
     and supporting formulas.
-2. more to come...
+2. [redis](./redis/) - implement a simple Redis server which communicates with existing
+    Redis clients.
+3. more to come...
