@@ -25,9 +25,26 @@ class NginxParser
   end
 
   def parse_stream(stream)
+    block_stack = [Block.new("global")]
+    line_stack = []
+    
     self.tokens(stream) do |kind, token|
-      puts "#{kind}: #{token}"
+      case kind
+      when :term
+        line_stack << token
+      when :semicolon
+        block_stack[-1].attrs << line_stack.join(' ')
+        line_stack = []
+      when :block_start
+        new_block = Block.new(line_stack.join(' '))
+        block_stack[-1].blocks << new_block
+        block_stack << new_block
+        line_stack = []
+      when :block_end
+        block_stack.pop()
+      end
     end
+    block_stack[0]
   end
 
   def tokens(stream)
@@ -38,7 +55,8 @@ class NginxParser
         acc = ''
       end
     end
-    
+
+    # TODO: this doesn't handle comments yet
     stream.each_char do |c|
       case c
       when /\s/
@@ -58,4 +76,21 @@ class NginxParser
     end
     flush_acc
   end
+end
+
+
+class Block
+  attr_accessor :name, :attrs, :blocks
+  
+  def initialize(name)
+    @name = name
+    @attrs = []
+    @blocks = []
+  end
+
+  def to_s
+    children = (@blocks.map { |b| b.name }).join(',')
+    "Block(#{@name}, attrs[#{@attrs.join(',')}], children[#{children}])"
+  end    
+  
 end

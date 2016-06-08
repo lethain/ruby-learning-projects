@@ -11,6 +11,26 @@ class TestParse < Test::Unit::TestCase
       np.parse_file(f)
     end
     np.parse_string(File.read(path))
-    # assert_equal('a', 2)
   end
+
+  def test_parse_simple
+    np = NginxParser.new
+    path = 'simple.cfg'
+
+    cfg = np.parse_path(path)
+    assert_equal(cfg.name, 'global')
+    assert_equal(cfg.blocks.length, 1)
+    assert_equal(cfg.blocks[0].name, 'server')
+
+    server = cfg.blocks[0]
+    assert_equal(server.blocks.length, 2)
+    assert_equal(server.blocks[0].name, 'location /')
+    assert_equal(server.blocks[0].attrs.length, 1)
+    assert_equal(server.blocks[0].attrs[0], 'root /data/www')
+                 
+    assert_equal(server.blocks[1].name, 'location /images/')
+    assert_equal(server.blocks[1].attrs.length, 1)
+    assert_equal(server.blocks[1].attrs[0], 'root /data')    
+  end
+
 end
