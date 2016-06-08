@@ -1,11 +1,62 @@
 # Simple learning project for Ruby.
 
-class Cell
-  attr_accessor :val
+FORMULAS = ['sum', 'avg']
+
+class CellRange
+  include Enumerable
   
+  def initialize(range)
+    @srow, @scol, @erow, @ecol = /([A-Za-z]+)([0-9]+):([A-Za-z]+)([0-9]+)/.match(range).captures
+  end
+
+  def each
+    (@srow..@erow).each do |row|
+      (@scol..@ecol).each do |col|
+        yield "#{row}#{col}"
+      end
+    end
+  end
+  
+end
+
+class Cell
   def initialize(row, col, val=nil)
     @row = row
     @col = col
+    @val = val
+  end
+
+  def val(id=nil)  
+    if self.formula?
+      puts "is formula: #{@val}, id: #{id}"
+      if id == self.object_id
+        raise "entered circular loop of evaluation"
+      elsif id == nil
+        id = self.object_id
+      end
+      self.eval_formula(id)
+    else
+      @val
+    end
+  end
+
+  def eval_formula(id)
+    cells = []
+    "not implemented"
+  end
+
+  def formula?
+    if @val.class == String
+      FORMULAS.each do |f|
+        if @val.downcase.include?(f)
+          return true
+        end
+      end
+    end
+    false
+  end
+
+  def val=(val)
     @val = val
   end
 
