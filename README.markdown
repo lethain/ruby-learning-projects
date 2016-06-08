@@ -12,6 +12,8 @@ Projects:
 1. [spreadsheet](./spreadsheet/) - implement a simple class which represents a Spreadsheet,
     including both overriding the `[]` and `[]=` methods for easy access,
     and supporting formulas.
+2. [statsd](./statsd/) - implement a simple Statsd server which you can send data to via
+    existing statsd clients like [statsd-ruby](https://github.com/reinh/statsd).
 2. [redis](./redis/) - implement a simple Redis server which communicates with existing
     Redis clients.
 3. more to come...
