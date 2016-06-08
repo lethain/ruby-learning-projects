@@ -42,5 +42,15 @@ class TestSpreadsheet < Test::Unit::TestCase
     assert_equal(s["B1"].val, 30)
   end
 
+  def test_avg
+    s = Spreadsheet.new
+    s["A1"] = 5
+    s["A2"] = 5
+    s["A3"] = 15
+    s["A12"] = 15
+    s["B1"] = "avg(A1:A100)"
+    assert_equal(s["B1"].val, 10)
+  end
+
 
 end

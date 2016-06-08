@@ -44,13 +44,17 @@ class Cell
 
   def eval_formula(id)
     func, range = self.parse_formula()
-    vals = CellRange.new(range).map { |x| @row.sheet[x].val.to_i }
+    cells = CellRange.new(range).map { |x| @row.sheet[x] }
+    all_vals = cells.map { |x| x.val(id) }
+    not_nil_vals = all_vals.select { |x| x.class != NilClass }
+    vals = not_nil_vals.map { |x| x.to_i }
     
     case func
     when "sum"
       vals.reduce(:+) 
     when "avg"
-      vals.reduce(:+).to_f.fdiv(vals.length)
+      summed = vals.reduce(:+)
+      summed.to_f / vals.length
     else
       raise "unknown formula: #{func}"
     end
